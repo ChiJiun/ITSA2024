@@ -372,6 +372,10 @@ body {
         font-size: 14px;        /* 減小字體大小 */
         order: 2;               /* 顯示順序：第二個 */
     }
+    
+    .row-left-img .content-text {
+    margin-left: 0px;        /* 移除負邊距，恢復正常佈局 */
+}
 
     /* 右圖左文佈局小螢幕統一處理 - 確保垂直排列 */
     .row-right-img {

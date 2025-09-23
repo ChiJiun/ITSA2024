@@ -2,10 +2,10 @@
  * ==============================================================================
  * 健康度量管理系統 - JavaScript 功能檔案
  * ==============================================================================
- * 
+ *
  * 系統描述：
  * 提供完整的前端互動功能，包含用戶驗證、介面切換、資料管理等
- * 
+ *
  * 主要功能模組：
  * 1. 用戶登入驗證系統
  * 2. 密碼變更管理
@@ -13,19 +13,19 @@
  * 4. AJAX 資料通訊
  * 5. 表單驗證處理
  * 6. 動態內容渲染
- * 
+ *
  * 技術架構：
  * - jQuery 3.6.0：DOM 操作和事件處理
  * - AJAX：與後端 PHP 服務通訊
  * - 前端驗證：表單數據驗證
  * - 動態 UI：根據用戶角色顯示不同介面
- * 
+ *
  * 安全特性：
  * - 前端表單驗證
  * - 密碼強度檢查
  * - CSRF 保護機制
  * - 角色權限控制
- * 
+ *
  * 開發資訊：
  * 團隊：Team 021
  * 日期：2024/09/22
@@ -86,8 +86,8 @@ function bindEvents() {
   $(".close").on("click", closeModal);
 
   // 管理功能按鈕事件：新增各種資料的對話框
-  $("#addUserBtn").on("click", showAddUserModal);    // 新增用戶
-  $("#addItemBtn").on("click", showAddItemModal);    // 新增醫檢項目
+  $("#addUserBtn").on("click", showAddUserModal); // 新增用戶
+  $("#addItemBtn").on("click", showAddItemModal); // 新增醫檢項目
   $("#addResultBtn").on("click", showAddResultModal); // 新增檢查結果
 }
 
@@ -120,19 +120,19 @@ function handleLogin(e) {
 
   // 建立 FormData 物件：準備提交給後端的資料
   const formData = new FormData();
-  formData.append("action", "login");                    // 指定操作類型
-  formData.append("account", $("#account").val());       // 用戶帳號
-  formData.append("password", $("#password").val());     // 用戶密碼
+  formData.append("action", "login"); // 指定操作類型
+  formData.append("account", $("#account").val()); // 用戶帳號
+  formData.append("password", $("#password").val()); // 用戶密碼
 
   // 發送 AJAX 登入請求到後端驗證服務
   $.ajax({
-    url: "auth.php",           // 後端驗證端點
-    type: "POST",              // HTTP POST 方法
-    data: formData,            // 表單資料
-    processData: false,        // 不處理資料：讓 jQuery 保持 FormData 格式
-    contentType: false,        // 不設置 Content-Type：讓瀏覽器自動設置
-    dataType: "json",          // 期望的回應資料格式
-    
+    url: "auth.php", // 後端驗證端點
+    type: "POST", // HTTP POST 方法
+    data: formData, // 表單資料
+    processData: false, // 不處理資料：讓 jQuery 保持 FormData 格式
+    contentType: false, // 不設置 Content-Type：讓瀏覽器自動設置
+    dataType: "json", // 期望的回應資料格式
+
     /**
      * AJAX 成功回呼函數
      * 功能：處理後端回傳的登入結果
@@ -141,12 +141,12 @@ function handleLogin(e) {
     success: function (response) {
       if (response.success) {
         // 登入成功處理
-        
+
         // 更新用戶資訊顯示：根據用戶類型顯示適當的身份
         $("#userName").text(
           response.user_type === "technician" ? "醫檢員" : "受檢者"
         );
-        $("#userInfo").show();   // 顯示用戶資訊區域
+        $("#userInfo").show(); // 顯示用戶資訊區域
 
         // 根據用戶狀態和類型導向適當介面
         if (response.first_login && response.user_type === "patient") {
@@ -155,11 +155,11 @@ function handleLogin(e) {
         } else if (response.user_type === "technician") {
           // 醫檢員：進入管理介面
           showPanel("technicianPanel");
-          loadTechnicianData();    // 載入管理資料
+          loadTechnicianData(); // 載入管理資料
         } else {
           // 一般病患：進入病患介面
           showPanel("patientPanel");
-          loadPatientData();       // 載入個人資料
+          loadPatientData(); // 載入個人資料
         }
 
         // 顯示成功訊息
@@ -169,7 +169,7 @@ function handleLogin(e) {
         showMessage("loginMessage", response.message, "error");
       }
     },
-    
+
     /**
      * AJAX 錯誤回呼函數
      * 功能：處理網路錯誤或伺服器錯誤
@@ -178,7 +178,7 @@ function handleLogin(e) {
     error: function (xhr, status, error) {
       // 錯誤處理：提供用戶友善的錯誤訊息
       let errorMessage = "系統錯誤：";
-      
+
       // 嘗試解析伺服器回傳的錯誤訊息
       if (xhr.responseText) {
         try {
@@ -192,7 +192,7 @@ function handleLogin(e) {
         // 網路錯誤或其他錯誤
         errorMessage += " " + status + " - " + error;
       }
-      
+
       // 顯示錯誤訊息給用戶
       showMessage("loginMessage", errorMessage, "error");
     },
@@ -216,7 +216,7 @@ function handleChangePassword(e) {
   // =============================================================================
   // 前端密碼驗證 (Frontend Password Validation)
   // =============================================================================
-  
+
   // 密碼一致性檢查：確保兩次輸入的密碼相同
   if (newPassword !== confirmPassword) {
     showMessage("passwordMessage", "新密碼與確認密碼不一致", "error");
@@ -235,20 +235,20 @@ function handleChangePassword(e) {
 
   // 準備提交資料：建立表單資料物件
   const formData = new FormData();
-  formData.append("action", "change_password");              // 操作類型
+  formData.append("action", "change_password"); // 操作類型
   formData.append("current_password", $("#currentPassword").val()); // 當前密碼
-  formData.append("new_password", newPassword);              // 新密碼
-  formData.append("confirm_password", confirmPassword);      // 確認密碼
+  formData.append("new_password", newPassword); // 新密碼
+  formData.append("confirm_password", confirmPassword); // 確認密碼
 
   // 發送密碼變更 AJAX 請求
   $.ajax({
-    url: "auth.php",           // 後端處理端點
-    type: "POST",              // HTTP 方法
-    data: formData,            // 表單資料
-    processData: false,        // 保持 FormData 格式
-    contentType: false,        // 讓瀏覽器自動設置 Content-Type
-    dataType: "json",          // 期望回應格式
-    
+    url: "auth.php", // 後端處理端點
+    type: "POST", // HTTP 方法
+    data: formData, // 表單資料
+    processData: false, // 保持 FormData 格式
+    contentType: false, // 讓瀏覽器自動設置 Content-Type
+    dataType: "json", // 期望回應格式
+
     /**
      * 密碼變更成功回呼
      * 功能：處理密碼變更成功後的介面切換
@@ -257,11 +257,11 @@ function handleChangePassword(e) {
       if (response.success) {
         // 密碼變更成功
         showMessage("passwordMessage", response.message, "success");
-        
+
         // 延遲 2 秒後自動導向病患介面
         setTimeout(function () {
-          showPanel("patientPanel");  // 切換到病患介面
-          loadPatientData();          // 載入病患資料
+          showPanel("patientPanel"); // 切換到病患介面
+          loadPatientData(); // 載入病患資料
         }, 2000);
       } else {
         showMessage("passwordMessage", response.message, "error");
@@ -309,33 +309,33 @@ function handleLogout() {
  * 密碼格式驗證函數
  * 功能：檢查密碼是否符合系統安全要求
  * 規範：12碼英文字大小寫與數字混合
- * 
+ *
  * @param {string} password - 要驗證的密碼
  * @return {boolean} - 驗證結果，true 表示符合格式
- * 
+ *
  * 驗證條件：
  * 1. 長度必須為 12 碼
  * 2. 必須包含大寫英文字母
- * 3. 必須包含小寫英文字母  
+ * 3. 必須包含小寫英文字母
  * 4. 必須包含數字
  * 5. 只能包含英文字母和數字（無特殊符號）
  */
 function validatePasswordFormat(password) {
   // 長度檢查：必須為 12 碼
   if (password.length !== 12) return false;
-  
+
   // 大寫字母檢查：至少包含一個大寫字母
   if (!/[A-Z]/.test(password)) return false;
-  
+
   // 小寫字母檢查：至少包含一個小寫字母
   if (!/[a-z]/.test(password)) return false;
-  
+
   // 數字檢查：至少包含一個數字
   if (!/[0-9]/.test(password)) return false;
-  
+
   // 字符集檢查：只能包含英文字母和數字
   if (!/^[a-zA-Z0-9]+$/.test(password)) return false;
-  
+
   // 所有檢查通過
   return true;
 }
@@ -343,9 +343,9 @@ function validatePasswordFormat(password) {
 /**
  * 面板顯示切換函數
  * 功能：在不同的系統介面之間切換
- * 
+ *
  * @param {string} panelId - 要顯示的面板 ID
- * 
+ *
  * 面板類型：
  * - loginPanel: 登入介面
  * - changePasswordPanel: 密碼變更介面
@@ -355,7 +355,7 @@ function validatePasswordFormat(password) {
 function showPanel(panelId) {
   // 隱藏所有面板：確保只顯示一個面板
   $(".panel").hide();
-  
+
   // 顯示指定面板
   $("#" + panelId).show();
 }
@@ -364,17 +364,17 @@ function showPanel(panelId) {
  * 訊息顯示函數
  * 功能：在指定元素中顯示狀態訊息
  * 特色：自動淡出、支援不同訊息類型的樣式
- * 
+ *
  * @param {string} elementId - 顯示訊息的元素 ID
  * @param {string} message - 要顯示的訊息內容
  * @param {string} type - 訊息類型（success/error/warning）
  */
 function showMessage(elementId, message, type) {
   const $element = $("#" + elementId);
-  
+
   // 重置樣式：移除舊的類別，加入新的類別
   $element.removeClass("success error").addClass(type);
-  
+
   // 顯示訊息：設定文字內容並顯示元素
   $element.text(message).show();
 
@@ -388,7 +388,7 @@ function showMessage(elementId, message, type) {
  * 分頁標籤切換處理函數
  * 功能：處理管理介面中的分頁切換
  * 包含：視覺狀態更新、內容切換、資料載入
- * 
+ *
  * @param {Event} e - 點擊事件物件
  */
 function handleTabSwitch(e) {
@@ -396,8 +396,8 @@ function handleTabSwitch(e) {
   const tabName = $(e.target).data("tab");
 
   // 更新分頁標籤視覺狀態
-  $(".tab-btn").removeClass("active");    // 移除所有標籤的啟用狀態
-  $(e.target).addClass("active");         // 設定當前標籤為啟用
+  $(".tab-btn").removeClass("active"); // 移除所有標籤的啟用狀態
+  $(e.target).addClass("active"); // 設定當前標籤為啟用
 
   // 更新分頁內容顯示
   $(".tab-content").removeClass("active"); // 隱藏所有分頁內容
